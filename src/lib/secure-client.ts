@@ -1,6 +1,14 @@
 import { loadWasmBridge } from './wasm-bridge.ts';
 import { requestJSON, parseJSONResponse } from './http.ts';
-import { ApiError } from './types.ts';
+import {
+  ApiError,
+  isEchoResponse,
+  isEmptyResponse,
+  isLoginResponse,
+  isProfileResponse,
+  isSecureBootstrapConfig,
+  isSessionStatus,
+} from './types.ts';
 import type {
   EchoResponse,
   ProfileResponse,
@@ -20,15 +28,17 @@ let secure: SecureFetchClient | undefined;
 
 /** Plain, unauthenticated/session-cookie endpoints. */
 export const authApi = {
-  session: () => requestJSON<SessionStatus>('/auth/session', { method: 'GET' }),
+  session: () => requestJSON<SessionStatus>('/auth/session', isSessionStatus, { method: 'GET' }),
 
   login: (username: string, password: string) =>
-    requestJSON<{ authenticated: boolean }>('/auth/login', {
+    requestJSON<{ authenticated: boolean }>('/auth/login', isLoginResponse, {
       method: 'POST',
       body: { username, password },
     }),
 
-  logout: () => requestJSON<void>('/auth/logout', { method: 'POST' }),
+  logout: async () => {
+    await requestJSON('/auth/logout', isEmptyResponse, { method: 'POST' });
+  },
 };
 
 /**
@@ -39,7 +49,7 @@ export const authApi = {
  */
 export async function ensureSecureSession(): Promise<SecureFetchClient> {
   if (secure) return secure;
-  const config = await requestJSON<SecureBootstrapConfig>('/secure-config.json', { method: 'POST' });
+  const config = await requestJSON<SecureBootstrapConfig>('/secure-config.json', isSecureBootstrapConfig, { method: 'POST' });
   const { createSecureFetch } = await loadWasmBridge();
   secure = await createSecureFetch({
     ...config,
@@ -69,7 +79,7 @@ export const secureApi = {
   async me(): Promise<ProfileResponse> {
     const client = await requireSecureClient();
     const response = await client.fetch('/api/me');
-    return parseJSONResponse<ProfileResponse>(response);
+    return parseJSONResponse<ProfileResponse>(response, isProfileResponse);
   },
 
   async echo(payload: unknown): Promise<EchoResponse> {
@@ -79,7 +89,7 @@ export const secureApi = {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    return parseJSONResponse<EchoResponse>(response);
+    return parseJSONResponse<EchoResponse>(response, isEchoResponse);
   },
 };
 
