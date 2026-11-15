@@ -1,0 +1,5 @@
+{
+  "name": "audit",
+  "description": "Audit log viewer with chain verification (needs the audit backend module).",
+  "index": "src/modules/audit/index.tsx"
+}

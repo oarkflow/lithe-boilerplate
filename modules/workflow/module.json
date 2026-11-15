@@ -1,0 +1,5 @@
+{
+  "name": "workflow",
+  "description": "Applicant view, case queue and case screens, workflow definition editor and form settings (needs the workflow backend module).",
+  "index": "src/modules/workflow/index.tsx"
+}

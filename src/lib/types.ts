@@ -6,6 +6,9 @@
 export interface SessionStatus {
   authenticated: boolean;
   userID?: string;
+  name?: string;
+  tenant?: string;
+  roles?: string[];
 }
 
 export interface SecureBootstrapConfig {
@@ -35,6 +38,7 @@ export interface SecureFetchClient {
 
 export interface WasmBridge {
   createSecureFetch(config: Record<string, unknown>): Promise<SecureFetchClient>;
+  clearDevice(): Promise<void>;
 }
 
 export interface ProfileResponse {
@@ -50,17 +54,25 @@ export interface EchoResponse {
 
 // A normalized error every API call in this app throws, whether it came
 // from a plain fetch to /auth/* or an encrypted call through secure-fetch.
+export interface FieldError { path: string; rule?: string; message: string }
+
 export class ApiError extends Error {
   readonly status: number;
   readonly code?: string;
   readonly detail?: string;
+  /** Structured problems returned when a workflow definition cannot be published. */
+  readonly problems?: string[];
+  /** Per-field validation errors (a form marks the inputs they name). */
+  readonly fields: FieldError[];
 
-  constructor(message: string, status: number, code?: string, detail?: string) {
+  constructor(message: string, status: number, code?: string, detail?: string, fields: FieldError[] = [], problems?: string[]) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
     this.code = code;
     this.detail = detail;
+    this.fields = fields;
+    this.problems = problems;
   }
 }
 
@@ -120,7 +132,7 @@ export const isProfileResponse: Validator<ProfileResponse> = (value): value is P
 export const isEchoResponse: Validator<EchoResponse> = (value): value is EchoResponse =>
   isRecord(value) && typeof value.accepted === 'boolean' && 'body' in value;
 
-export const isLoginResponse: Validator<{ authenticated: boolean }> = (value): value is { authenticated: boolean } =>
+export const isLoginResponse: Validator<{ authenticated: boolean; role?: string }> = (value): value is { authenticated: boolean; role?: string } =>
   isRecord(value) && typeof value.authenticated === 'boolean';
 
 // /auth/logout returns an empty JSON object on success; nothing more to

@@ -1,14 +1,16 @@
+import { resolve, type MaybeReactive } from '../../lib/reactive.ts';
+
 export type AlertTone = 'error' | 'info' | 'ok';
 
 export interface AlertProps {
-  tone?: AlertTone;
+  /** A tone, or a getter/signal for one that changes over time. */
+  tone?: MaybeReactive<AlertTone>;
   children?: unknown;
 }
 
 export function Alert(props: AlertProps) {
-  const tone = props.tone ?? 'info';
   return (
-    <p class={`fh-alert fh-alert--${tone}`} role={tone === 'error' ? 'alert' : 'status'}>
+    <p class={() => `fh-alert fh-alert--${resolve(props.tone) ?? 'info'}`} role="status">
       {props.children}
     </p>
   );

@@ -1,0 +1,39 @@
+/*
+ * Shared building blocks for module views (tables, key/value lists, toasts, form
+ * grids). They use the design tokens of app.css, so a restyle there restyles
+ * every module.
+ */
+.ui-toasts { position: fixed; right: 20px; bottom: 20px; z-index: 50; display: grid; gap: 8px; max-width: min(380px, 92vw); }
+.ui-toast { margin: 0; padding: 10px 14px; border: 1px solid var(--fh-border); border-left: 3px solid var(--fh-accent); border-radius: var(--fh-radius-sm); background: var(--fh-surface); color: var(--fh-text); font-size: 13px; box-shadow: var(--fh-shadow); }
+.ui-toast--ok { border-left-color: var(--fh-ok); }
+.ui-toast--error { border-left-color: var(--fh-danger); }
+.ui-kvs { margin: 0 0 14px; display: grid; gap: 0; }
+.ui-kv { display: flex; gap: 16px; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--fh-border-soft); }
+.ui-kv:last-child { border-bottom: 0; }
+.ui-kv dt { color: var(--fh-text-muted); }
+.ui-kv dd { margin: 0; text-align: right; word-break: break-word; font-weight: 500; }
+.ui-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px 16px; align-items: end; }
+.ui-grid > .fh-form__submit, .ui-grid > .fh-alert { grid-column: 1 / -1; }
+.ui-grid > .fh-form__submit { justify-self: start; }
+.ui-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; }
+.ui-table { width: 100%; border-collapse: collapse; }
+.ui-table th, .ui-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--fh-border-soft); vertical-align: top; }
+.ui-table th { font-size: 12px; font-weight: 600; color: var(--fh-text-muted); background: var(--fh-surface-2); }
+.ui-table tr:last-child td { border-bottom: 0; }
+.ui-rowactions { display: flex; flex-wrap: wrap; gap: 6px; }
+.ui-scopes { border: 1px solid var(--fh-border); border-radius: var(--fh-radius-sm); padding: 10px 14px 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 16px; }
+.ui-scopes legend { padding: 0 6px; font-size: 13px; font-weight: 550; }
+.ui-check { display: flex; gap: 8px; align-items: center; font-weight: 400; }
+.ui-inline { display: flex; flex-direction: row; flex-wrap: wrap; gap: 8px; align-items: center; }
+.ui-inline input, .ui-inline select { min-height: 36px; padding: 6px 10px; border: 1px solid var(--fh-border); border-radius: var(--fh-radius-sm); background: var(--fh-surface); color: var(--fh-text); font: inherit; }
+.ui-mono { font-family: var(--fh-font-mono); font-size: 12px; }
+.ui-overdue { color: var(--fh-danger); font-weight: 550; }
+.ui-wf-source { width: 100%; min-height: 420px; font-family: var(--fh-font-mono); font-size: 12px; }
+.ui-qrwrap { display: flex; justify-content: center; padding: 8px 0 12px; }
+.ui-qrwrap svg { border: 1px solid var(--fh-border); border-radius: var(--fh-radius-sm); max-width: 100%; height: auto; }
+.ui-token { word-break: break-all; display: block; margin-top: 8px; }
+.ui-result { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--fh-border); }
+@media (max-width: 720px) {
+  .ui-toasts { bottom: 12px; left: 12px; right: 12px; max-width: none; }
+  .ui-table { display: block; overflow-x: auto; white-space: nowrap; }
+}

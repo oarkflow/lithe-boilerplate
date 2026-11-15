@@ -1,3 +1,5 @@
+import { For } from '@oarkflow/lithe/dom';
+import { toasts, type Toast } from '../../lib/api.ts';
 import { Sidebar } from './Sidebar.tsx';
 import { Topbar } from './Topbar.tsx';
 
@@ -14,6 +16,11 @@ export function AppShell(props: AppShellProps) {
       <div class="fh-shell__main">
         <Topbar />
         <main class="fh-shell__content">{props.children}</main>
+      </div>
+      <div class="ui-toasts" aria-live="polite">
+        <For each={() => toasts.value} key={(t: Toast) => t.id}>
+          {(t: Toast) => <p class={`ui-toast ui-toast--${t.tone}`}>{t.text}</p>}
+        </For>
       </div>
     </div>
   );

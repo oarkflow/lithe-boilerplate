@@ -44,7 +44,11 @@ export async function parseJSONResponse<T>(response: Response, validate: Validat
     const record = (body ?? {}) as Record<string, unknown>;
     const detail = typeof record.detail === 'string' ? record.detail : undefined;
     const code = typeof record.code === 'string' ? record.code : undefined;
-    throw new ApiError(detail || `request failed with status ${response.status}`, response.status, code, detail);
+    const fields = (Array.isArray(record.details) ? record.details : [])
+      .filter((d): d is Record<string, unknown> => typeof d === 'object' && d !== null && typeof (d as Record<string, unknown>).message === 'string')
+      .map((d) => ({ path: String(d.path ?? ''), rule: typeof d.rule === 'string' ? d.rule : undefined, message: String(d.message) }));
+    const problems = Array.isArray(record.problems) ? record.problems.filter((p): p is string => typeof p === 'string') : undefined;
+    throw new ApiError(detail || `request failed with status ${response.status}`, response.status, code, detail, fields, problems);
   }
   if (!validate(body)) {
     throw new ApiError('server response did not match the expected shape', response.status, 'INVALID_RESPONSE_SHAPE');

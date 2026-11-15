@@ -1,0 +1,5 @@
+{
+  "name": "billing",
+  "description": "Your balance, top-ups and invoices, plus the pricing and customer-account administration (needs the billing backend module).",
+  "index": "src/modules/billing/index.tsx"
+}

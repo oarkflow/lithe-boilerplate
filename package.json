@@ -11,6 +11,6 @@
     "typecheck": "lithe typecheck ."
   },
   "dependencies": {
-    "@oarkflow/lithe": "^1.1.7"
+    "@oarkflow/lithe": "^1.1.8"
   }
 }

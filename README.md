@@ -40,6 +40,25 @@ src/
                             and DashboardPanels, which swaps between them
 ```
 
+## Modules
+
+Optional features live in `modules/<name>/` (not compiled by default). `fh-init -with <names>`
+copies the views of every chosen module into `src/modules/<name>/` and lists them in
+`src/modules/registry.ts`; the sidebar shows an entry per `ModuleDef` the signed-in
+person may use (`GET /api/permissions`, checked with `can()` in `state/session.ts`).
+
+```text
+modules/<name>/
+  module.json                       { name, description, index }
+  src/modules/<name>/index.tsx      default export: ModuleDef[] (id, label, permission, view)
+  src/modules/<name>/*.tsx          the screens
+```
+
+Available: `accounts` (Security, Accounts), `rbac` (Access control), `audit` (Audit log),
+`workflow` (My cases, Cases, Workflow definitions, Form settings), `billing` (Billing,
+Pricing & customers). They talk to the same-named backend modules in `fh-template`.
+The sign-in screen follows `config/app.bcl` (tenant field, registration, authenticator code).
+
 ## Extending it
 
 - **A new encrypted endpoint**: add one function to `secureApi` in

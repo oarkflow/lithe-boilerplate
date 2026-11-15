@@ -1,6 +1,7 @@
 import { mount } from '@oarkflow/lithe/dom';
 import { App } from './app.tsx';
 import './styles/app.css';
+import './styles/modules.css';
 
 const root = document.getElementById('app');
 if (!root) {

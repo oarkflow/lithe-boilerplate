@@ -1,0 +1,5 @@
+{
+  "name": "rbac",
+  "description": "Roles, permissions, grants, history and denials (needs the rbac backend module).",
+  "index": "src/modules/rbac/index.tsx"
+}
